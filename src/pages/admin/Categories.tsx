@@ -1,30 +1,51 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Input from '../../components/Input'
-import { ICategoryCreateDto } from '../../types/global.type'
+import { ICategoryCreateDto, ICategoryGetAllDto } from '../../types/global.type'
 import httpModule from '../../helpers/http.module';
 
 function Categories() {
 
     const [showFormNew, setShowFormNew] = useState<string>("hidden")
-    const [categorie, setCategorie]= useState<ICategoryCreateDto>({name: ""});
-    
-    const handleOnChangeInputReference = (e:  React.ChangeEvent<HTMLInputElement>) => {
-        setCategorie({...categorie, name: e.target.value})
+    const [category, setCategory] = useState<ICategoryCreateDto>({ name: "" });
+    const [categories, setCategories] = useState<ICategoryGetAllDto[]>([]);
+
+    const handleOnChangeInputReference = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setCategory({ ...category, name: e.target.value })
     }
 
     const handleClickSaveButton = () => {
 
-        
+
         httpModule
-          httpModule
-            .post("/Category/Create", categorie)
+        httpModule
+            .post("/Category/Create", category)
             .then(() => {
-                
+
                 setShowFormNew("hidden")
 
             })
             .catch((error) => alert(error));
-      };
+    };
+
+    useEffect(() => {
+
+        const getDataListCategory = () => {
+            httpModule
+                .get<ICategoryGetAllDto[]>("/Category/Get")
+                .then((response) => {
+                    console.log(response.data);
+                    setCategories(response.data);
+                })
+                .catch((error) => {
+                    alert("Error");
+                    console.log(error);
+                });
+        }
+
+
+        getDataListCategory();
+
+    }, []);
 
 
     return (
@@ -33,7 +54,7 @@ function Categories() {
 
                 <div className="flex justify-between">
                     <div className="ml-5 text-start text-2xl font-bold">Catégories</div>
-                    <button onClick={() => {setShowFormNew("")}} className="w-44 mr-5 border-2 font-bold rounded-2xl px-3 py-1 text-sm border-black content-start my-3">Nouvelle catégorie</button>
+                    <button onClick={() => { setShowFormNew("") }} className="w-44 mr-5 border-2 font-bold rounded-2xl px-3 py-1 text-sm border-black content-start my-3">Nouvelle catégorie</button>
 
                 </div>
                 <table className="table-auto w-full text-center  border-collapse border border-slate-500">
@@ -46,14 +67,19 @@ function Categories() {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr >
-                            <td className="border border-slate-700  text-sm "></td>
-                            <td className="border border-slate-700  text-sm "></td>
-                            <td className="border border-slate-700  text-sm "></td>
-                            <td className="border border-slate-700  text-sm ">
+                        {
+                            categories.map((d, index) => (
+                                <tr key={index} >
+                                    <td className="border border-slate-700  text-sm "> {d.isActive} </td>
+                                    <td className="border border-slate-700  text-sm "> {d.name} </td>
+                                    <td className="border border-slate-700  text-sm text-black my-2 ">
+                                        <span className={"border-2 rounded-2xl text-xs  px-2 py-1 " + (String(d.isActive) === "true" ? "bg-green-500" : "bg-red-500") + " text-white font-bold ml-2"}></span>
+                                    </td>
+                                    <td className="border border-slate-700  text-sm ">test  </td>
+                                </tr>
+                            ))
+                        }
 
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
 
@@ -63,7 +89,7 @@ function Categories() {
                         <h1 className="mb-5 text-lg font-bold">Nouvelle catégorie  </h1>
                         <div className="flex flex-col gap-5">
                             <div className="w-full flex flex-col gap-3">
-                                <Input label={"Nom"} type={"text"} value={categorie.name} OnChange={handleOnChangeInputReference} />
+                                <Input label={"Nom"} type={"text"} value={category.name} OnChange={handleOnChangeInputReference} />
 
                             </div>
                             <div className="flex gap-2 justify-end">

@@ -179,12 +179,14 @@ function Marchandises() {
             {listmarchandises.map((d: IMarchandise) => (
               <tr key={d.reference}>
                 <td onClick={() => { setShowFormDetail('') }} className="border border-slate-700  text-sm">
-                  <img  className="object-cover rounded-lg h-12 mx-auto cursor-pointer" src="https://i.pinimg.com/564x/f0/a2/c4/f0a2c41001bb3bafc7d10705c51d62b2.jpg" alt="" />
+                  <img className="object-cover rounded-lg h-12 mx-auto cursor-pointer" src="https://i.pinimg.com/564x/f0/a2/c4/f0a2c41001bb3bafc7d10705c51d62b2.jpg" alt="" />
                 </td>
                 <td className="border border-slate-700  text-sm ">{d.reference}</td>
                 <td className="border border-slate-700  text-sm ">{d.designation}</td>
                 <td className="border border-slate-700  text-sm" >{d.categoryName}</td>
-                <td className="border border-slate-700  text-sm" > <span className="border-2 rounded-2xl text-xs  px-2 py-1 bg-green-500 text-white font-bold ml-2"></span> </td>
+                <td className="border border-slate-700  text-sm" >
+                  <span className={"border-2 rounded-2xl text-xs  px-2 py-1 " + (String(d.isActive) === "true" ? "bg-green-500" : "bg-red-500") + " text-white font-bold ml-2"}></span>
+                </td>
                 <td className="border border-slate-700  text-sm" >{d.unite}</td>
                 <td className="border border-slate-700  text-sm" >{d.seuilAlerte}</td>
                 <td className="border border-slate-700  text-sm" > {d.stockInitial} </td>
@@ -192,7 +194,7 @@ function Marchandises() {
                 <td className="border border-slate-700  text-sm" > {d.total} </td>
                 <td className="border border-slate-700  text-sm ">
                   <button onClick={() => { handleShowFormUpdateMarchandise(d) }} > <EditRoundedIcon /> </button>
-                  
+
                   <button onClick={(event) => { handleClickDeleteButton(event, d.reference) }}  > <DeleteOutlineIcon /> </button>
                 </td>
               </tr>
@@ -248,7 +250,7 @@ function Marchandises() {
           <div className="mx-auto">
             <img className='object-cover rounded-lg w-40 h-40 ' src="https://i.pinimg.com/564x/f0/a2/c4/f0a2c41001bb3bafc7d10705c51d62b2.jpg" alt="" />
           </div>
-          
+
 
           <div className="flex gap-2 justify-end">
             <button onClick={() => { setShowFormDetail("hidden") }} className="border-2 font-bold rounded-2xl px-3 py-1 text-sm border-blue my-3 bg-red-500 text-white">Annuler</button>

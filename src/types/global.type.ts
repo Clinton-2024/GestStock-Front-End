@@ -1,9 +1,3 @@
-export interface ICategoryGetAllDto
-{
-    id : number;
-    name : string;
-    IsActive : boolean;
-}
 
 export interface ICategoryCreateDto
 {
